@@ -2,11 +2,9 @@ PuBuImageLoader
 ===============
 
 #图片加载组件
-#版本：1.2.0
+#版本：1.2.1
 修正：
-1.增加了圆角功能
-2.增加了图片动画功能
-3.提供了图片网络加载开关
+1.增加了图片旋转功能
 
 
 
@@ -25,8 +23,8 @@ imageLoader.setAnimOfImage(Animation animation);
 imageLoader.setAnimOfImage(int AnimResource);
 
 //2种加载图片方式
-imageLoader.loadBitMap(iv, imageUrl, callBack, needRoundCorner, RoundCornerPixels);   //手工方式，使用回调自己操作
-imageLoader.loadBitMap(iv, imageUrl, type, needRoundCorner, RoundCornerPixels);       //自动方式，使用type确定图片的类型(src or background)
+imageLoader.loadBitMap(iv, imageUrl, callBack, needRoundCorner, RoundCornerPixels,isRotate,angle);   //手工方式，使用回调自己操作
+imageLoader.loadBitMap(iv, imageUrl, type, needRoundCorner, RoundCornerPixels,isRotate,angle);       //自动方式，使用type确定图片的类型(src or background)
 
 
 
