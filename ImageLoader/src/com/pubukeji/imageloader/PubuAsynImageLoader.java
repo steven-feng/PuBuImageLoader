@@ -1,23 +1,24 @@
 package com.pubukeji.imageloader;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import com.pubukeji.imageloader.exeception.AnimNotFoundExeception;
 import com.pubukeji.imageloader.exeception.ImgTypeNotSettingException;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
@@ -38,12 +39,13 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 /**
- * 公司：瀑布科技 名称：图片异步加载器<br />
+ * 公司：瀑布科技 <br />
+ * 名称：图片异步加载器<br />
  * E-mail:steven.feng.0901@gmail.com<br />
  * QQ:443889604<br />
  * 
  * @author steven
- * @version 1.2.0
+ * @version 1.2.1
  */
 public class PubuAsynImageLoader {
 	private static final String tag = "PubuAsynImageLoader";
@@ -136,6 +138,7 @@ public class PubuAsynImageLoader {
 	 * 初始化参数
 	 */
 
+	@SuppressLint("HandlerLeak")
 	private void initArgs() {
 		fetchFromWeb = true; // 默认情况下可以从网络获取图片
 		imageCache = new LruCache<String, SoftReference<Bitmap>>(
@@ -205,11 +208,16 @@ public class PubuAsynImageLoader {
 	 *            是否需要圆角样式
 	 * @param RoundCornerPixels
 	 *            圆角的像素
-	 * 
+	 * @param isRotate
+	 *            是否需要旋转
+	 * @param angle
+	 *            旋转角度
 	 */
 	public void loadBitMap(ImageView iv, String imageUrl, ImageType type,
-			boolean needRoundCorner, int RoundCornerPixels) {
-		loadBitMap(iv, imageUrl, type, null, needRoundCorner, RoundCornerPixels);
+			boolean needRoundCorner, int RoundCornerPixels, boolean isRotate,
+			int angle) {
+		loadBitMap(iv, imageUrl, type, null, needRoundCorner,
+				RoundCornerPixels, isRotate, angle);
 	}
 
 	/**
@@ -225,12 +233,16 @@ public class PubuAsynImageLoader {
 	 *            是否需要圆角样式
 	 * @param RoundCornerPixels
 	 *            圆角的像素
+	 * @param isRotate
+	 *            是否需要旋转
+	 * @param angle
+	 *            旋转角度
 	 */
 	public void loadBitMap(ImageView iv, String imageUrl,
 			ImageLoaderCallBack callBack, boolean needRoundCorner,
-			int RoundCornerPixels) {
+			int RoundCornerPixels, boolean isRotate, int angle) {
 		loadBitMap(iv, imageUrl, null, callBack, needRoundCorner,
-				RoundCornerPixels);
+				RoundCornerPixels, isRotate, angle);
 	}
 
 	/**
@@ -247,10 +259,15 @@ public class PubuAsynImageLoader {
 	 *            是否需要圆角样式
 	 * @param RoundCornerPixels
 	 *            圆角的像素
+	 * @param isRotate
+	 *            是否需要旋转
+	 * @param angle
+	 *            旋转角度
 	 */
 	private void loadBitMap(final ImageView iv, final String imageUrl,
 			final ImageType type, final ImageLoaderCallBack callBack,
-			final boolean needRoundCorner, final int RoundCornerPixels) {
+			final boolean needRoundCorner, final int RoundCornerPixels,
+			final boolean isRotate, final int angle) {
 		// 先设置预存的图片（图片没有被加载出来的图片）
 		iv.setImageResource(preloadImgRessource);
 
@@ -261,6 +278,9 @@ public class PubuAsynImageLoader {
 				// iv.setImageBitmap(imageCache.get(imageUrl).get());
 
 				Bitmap bitmap = imageCache.get(imageUrl).get();
+				if (isRotate) {
+					bitmap = rotate(bitmap, angle);
+				}
 				if (null != bitmap) {
 					Log.i(tag, "在内存中找到");
 					if (null != callBack) {
@@ -318,6 +338,9 @@ public class PubuAsynImageLoader {
 					// Log.i(tag, "从手机中找到图片路径：" + imageFile.getAbsolutePath());
 					Bitmap bitmap = BitmapFactory.decodeFile(imageFile
 							.getAbsolutePath());
+					if (isRotate) {
+						bitmap = rotate(bitmap, angle);
+					}
 					// imageCache.put(imageUrl, new
 					// SoftReference<Bitmap>(bitmap));
 					Log.i(tag, "在文件中找到");
@@ -334,7 +357,11 @@ public class PubuAsynImageLoader {
 					// 同意从网络中获取图片
 					try {
 						// 通过使用options来动态确定图片的大小，防止出现oom问题
-						InputStream is = (new URL(imageUrl)).openStream();
+						InputStream is = getInputStream(imageUrl);
+						if (is == null) {
+							return;
+						}
+						// InputStream is = (new URL(imageUrl)).openStream();
 						BitmapFactory.Options opts = new BitmapFactory.Options();
 						opts.inJustDecodeBounds = true;
 						BitmapFactory.decodeStream(is, null, opts);
@@ -347,32 +374,17 @@ public class PubuAsynImageLoader {
 						Bitmap bitmap = BitmapFactory.decodeStream(is, null,
 								opts);
 						is.close();
+						saveImage(imageUrl, bitmap);
+						if (isRotate) {
+							bitmap = rotate(bitmap, angle);
+						}
 						if (null != bitmap) {
 							tempObj.setBitmap(bitmap);
 							msg.what = SUCCESS_LOADED_IMAGE;
 							handler.sendMessage(msg);
 							Log.i(tag, "从网上上下载");
 						}
-						// 保存信息
-						// 1.保存到内存中
-						imageCache.put(imageUrl, new SoftReference<Bitmap>(
-								bitmap));
 
-						// 2.放入rom中
-						// 放入本地缓存
-						File file = currentSavePath;
-						String bitmapName = imageUrl.substring(imageUrl
-								.lastIndexOf("/") + 1);
-						File bitmapfile = new File(file.getAbsoluteFile() + "/"
-								+ bitmapName);
-						// Log.i(tag, "存储到手机里的路径：" +
-						// bitmapfile.getAbsolutePath());
-						bitmapfile.createNewFile();
-
-						FileOutputStream fos = new FileOutputStream(bitmapfile);
-						bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-
-						fos.close();
 					} catch (Exception e) {
 						msg.what = FAILED_LOADED_IMAGE;
 						handler.sendMessage(msg);
@@ -380,8 +392,47 @@ public class PubuAsynImageLoader {
 				}
 
 			}
+
+			private void saveImage(final String imageUrl, Bitmap bitmap)
+					throws IOException, FileNotFoundException {
+				// 保存信息
+				// 1.保存到内存中
+				imageCache.put(imageUrl, new SoftReference<Bitmap>(bitmap));
+
+				// 2.放入rom中
+				// 放入本地缓存
+				File file = currentSavePath;
+				String bitmapName = imageUrl.substring(imageUrl
+						.lastIndexOf("/") + 1);
+				File bitmapfile = new File(file.getAbsoluteFile() + "/"
+						+ bitmapName);
+				// Log.i(tag, "存储到手机里的路径：" +
+				// bitmapfile.getAbsolutePath());
+				bitmapfile.createNewFile();
+
+				FileOutputStream fos = new FileOutputStream(bitmapfile);
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+
+				fos.close();
+			}
 		};
 		executorService.submit(task);
+	}
+
+	private InputStream getInputStream(String imageUrl) {
+		try {
+			HttpURLConnection conn = (HttpURLConnection) (new URL(imageUrl))
+					.openConnection();
+			conn.setConnectTimeout(5000);
+			conn.setRequestMethod("GET");
+			conn.connect();
+			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				return conn.getInputStream();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -730,6 +781,33 @@ public class PubuAsynImageLoader {
 		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
 		canvas.drawBitmap(bitmap, rect, rect, paint);
 		return output;
+	}
+
+	/**
+	 * 图片翻转
+	 * 
+	 * @param source
+	 * @param angle
+	 * @return
+	 */
+	private Bitmap rotate(Bitmap source, int angle) {
+		if (angle != 0 && source != null) {
+			Matrix m = new Matrix();
+			m.setRotate(angle, (float) source.getWidth() / 2,
+					(float) source.getHeight() / 2);
+			try {
+				Bitmap b2 = Bitmap.createBitmap(source, 0, 0,
+						source.getWidth(), source.getHeight(), m, true);
+				if (source != b2) {
+					source.recycle();
+					source = b2;
+				}
+			} catch (OutOfMemoryError ex) {
+
+			}
+		}
+		return source;
+
 	}
 
 	/*

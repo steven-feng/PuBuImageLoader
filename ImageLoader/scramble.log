@@ -1,3 +1,4 @@
+.class com.pubukeji.imageloader.BuildConfig BuildConfig
 .class com.pubukeji.imageloader.R$attr attr
 .class com.pubukeji.imageloader.R$drawable drawable
 .class com.pubukeji.imageloader.R$id id
@@ -13,12 +14,15 @@
 .class com.pubukeji.imageloader.PubuAsynImageLoader$ImageLoaderProxy IIIlIllIlllIIllI
 .class com.pubukeji.imageloader.PubuAsynImageLoader$2 IlIIIIIIllllIIlI
 .field com.pubukeji.imageloader.PubuAsynImageLoader$2 this$0 Lcom/pubukeji/imageloader/PubuAsynImageLoader; _$1
-.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$RoundCornerPixels I _$2
-.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$needRoundCorner Z _$3
-.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$type Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageType; _$4
-.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$callBack Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageLoaderCallBack; _$5
-.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$iv Landroid/widget/ImageView; _$6
-.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$imageUrl Ljava/lang/String; _$7
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$angle I _$2
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$isRotate Z _$3
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$RoundCornerPixels I _$4
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$needRoundCorner Z _$5
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$type Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageType; _$6
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$callBack Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageLoaderCallBack; _$7
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$iv Landroid/widget/ImageView; _$8
+.field com.pubukeji.imageloader.PubuAsynImageLoader$2 val$imageUrl Ljava/lang/String; _$9
+.method com.pubukeji.imageloader.PubuAsynImageLoader$2 saveImage (Ljava/lang/String;Landroid/graphics/Bitmap;)V _$1
 .class com.pubukeji.imageloader.PubuAsynImageLoader$3 lIIIIIIIllllIIlI
 .field com.pubukeji.imageloader.PubuAsynImageLoader$3 this$0 Lcom/pubukeji/imageloader/PubuAsynImageLoader; _$1
 .field com.pubukeji.imageloader.PubuAsynImageLoader$3 val$callBack Lcom/pubukeji/imageloader/PubuAsynImageLoader$ClearCacheCallBack; _$2
@@ -38,18 +42,21 @@
 .field com.pubukeji.imageloader.PubuAsynImageLoader$ImageLoaderObject iv Landroid/widget/ImageView; _$7
 .field com.pubukeji.imageloader.PubuAsynImageLoader$ImageLoaderObject imageUrl Ljava/lang/String; _$8
 .class com.pubukeji.imageloader.PubuAsynImageLoader PubuAsynImageLoader
-.method com.pubukeji.imageloader.PubuAsynImageLoader access$1402 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Z)Z _$1
-.method com.pubukeji.imageloader.PubuAsynImageLoader access$1102 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Landroid/support/v4/util/LruCache;)Landroid/support/v4/util/LruCache; _$1
-.method com.pubukeji.imageloader.PubuAsynImageLoader access$1300 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;)Z _$1
-.method com.pubukeji.imageloader.PubuAsynImageLoader access$1200 ()Landroid/content/Context; _$1
-.method com.pubukeji.imageloader.PubuAsynImageLoader access$1100 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;)Landroid/support/v4/util/LruCache; _$2
-.method com.pubukeji.imageloader.PubuAsynImageLoader access$1000 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Landroid/graphics/BitmapFactory$Options;II)I _$1
-.method com.pubukeji.imageloader.PubuAsynImageLoader access$900 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;)Z _$3
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1602 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Z)Z _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1302 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Landroid/support/v4/util/LruCache;)Landroid/support/v4/util/LruCache; _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1500 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;)Z _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1400 ()Landroid/content/Context; _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1300 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;)Landroid/support/v4/util/LruCache; _$2
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1200 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Landroid/graphics/BitmapFactory$Options;II)I _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1100 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Ljava/lang/String;)Ljava/io/InputStream; _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$1000 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;)Z _$3
+.method com.pubukeji.imageloader.PubuAsynImageLoader access$900 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Landroid/graphics/Bitmap;I)Landroid/graphics/Bitmap; _$1
 .method com.pubukeji.imageloader.PubuAsynImageLoader access$800 ()Ljava/io/File; _$2
 .method com.pubukeji.imageloader.PubuAsynImageLoader access$700 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;)Landroid/os/Handler; _$4
 .method com.pubukeji.imageloader.PubuAsynImageLoader access$500 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Landroid/widget/ImageView;Landroid/graphics/Bitmap;ZI)V _$1
 .method com.pubukeji.imageloader.PubuAsynImageLoader access$400 (Lcom/pubukeji/imageloader/PubuAsynImageLoader;Landroid/widget/ImageView;Landroid/graphics/Bitmap;ZI)V _$2
-.method com.pubukeji.imageloader.PubuAsynImageLoader toRoundCorner (Landroid/graphics/Bitmap;I)Landroid/graphics/Bitmap; _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader rotate (Landroid/graphics/Bitmap;I)Landroid/graphics/Bitmap; _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader toRoundCorner (Landroid/graphics/Bitmap;I)Landroid/graphics/Bitmap; _$2
 .method com.pubukeji.imageloader.PubuAsynImageLoader computeInitialSampleSize (Landroid/graphics/BitmapFactory$Options;II)I _$1
 .method com.pubukeji.imageloader.PubuAsynImageLoader computeSampleSize (Landroid/graphics/BitmapFactory$Options;II)I _$2
 .method com.pubukeji.imageloader.PubuAsynImageLoader setBackgroundNoAnim (Landroid/widget/ImageView;Landroid/graphics/Bitmap;ZI)V _$1
@@ -57,7 +64,8 @@
 .method com.pubukeji.imageloader.PubuAsynImageLoader setSrcNoAnim (Landroid/widget/ImageView;Landroid/graphics/Bitmap;ZI)V _$3
 .method com.pubukeji.imageloader.PubuAsynImageLoader setSrc (Landroid/widget/ImageView;Landroid/graphics/Bitmap;ZI)V _$4
 .method com.pubukeji.imageloader.PubuAsynImageLoader deleteAllImage ()Z _$3
-.method com.pubukeji.imageloader.PubuAsynImageLoader loadBitMap (Landroid/widget/ImageView;Ljava/lang/String;Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageType;Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageLoaderCallBack;ZI)V _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader getInputStream (Ljava/lang/String;)Ljava/io/InputStream; _$1
+.method com.pubukeji.imageloader.PubuAsynImageLoader loadBitMap (Landroid/widget/ImageView;Ljava/lang/String;Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageType;Lcom/pubukeji/imageloader/PubuAsynImageLoader$ImageLoaderCallBack;ZIZI)V _$1
 .method com.pubukeji.imageloader.PubuAsynImageLoader initArgs ()V _$4
 .method com.pubukeji.imageloader.PubuAsynImageLoader collectionEnv ()V _$5
 .field com.pubukeji.imageloader.PubuAsynImageLoader animImgShow Landroid/view/animation/Animation; _$1
